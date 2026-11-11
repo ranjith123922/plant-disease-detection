@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>KrishiMitra AI | Plant Disease Detection</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- TOP NAVIGATION -->
+    <nav class="navbar">
+
+        <div class="brand">
+            <div class="brand-icon">🌿</div>
+            <div>
+                <h2>KrishiMitra AI</h2>
+                <span>Smart Agriculture Companion</span>
+            </div>
+        </div>
+
+        <div class="nav-center">
+            <span class="ai-badge">● AI Powered</span>
+        </div>
+
+        <div class="nav-right">
+            <span class="status">● System Online</span>
+            <span class="user-icon">👤</span>
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN LAYOUT -->
+    <div class="dashboard">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <h4>MAIN MENU</h4>
+
+            <a href="/" class="menu-item active">
+                <span>⌂</span> Dashboard
+            </a>
+
+            <a href="#detection" class="menu-item">
+                <span>🌱</span> Disease Detection
+            </a>
+
+            <a href="#results" class="menu-item">
+                <span>📊</span> Analysis Results
+            </a>
+
+            <a href="#about" class="menu-item">
+                <span>ℹ</span> About Project
+            </a>
+
+            <div class="sidebar-bottom">
+                <div class="help-card">
+                    <span>🌾</span>
+                    <h4>Smart Farming</h4>
+                    <p>AI technology for healthier crops.</p>
+                </div>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <section class="welcome">
+
+                <div class="welcome-icon">✿</div>
+
+                <h1>AI Crop Disease Detection</h1>
+
+                <p>
+                    Upload a photo of your plant leaf for AI-powered
+                    disease identification.
+                </p>
+
+            </section>
+
+
+            <!-- UPLOAD AND RESULT SECTION -->
+            <section class="workspace" id="detection">
+
+                <!-- IMAGE UPLOAD -->
+                <div class="upload-panel">
+
+                    <div class="section-heading">
+                        <h2>🌿 Upload Plant Image</h2>
+                        <span class="step-badge">STEP 01</span>
+                    </div>
+
+                    <form method="POST"
+                          enctype="multipart/form-data">
+
+                        <label for="leaf-image" class="upload-area">
+
+                            <img id="image-preview"
+                                 src=""
+                                 alt="Selected plant leaf"
+                                 style="display:none;">
+
+                            <div id="upload-placeholder">
+                                <div class="upload-icon">📷</div>
+
+                                <h3>Upload Leaf Image</h3>
+
+                                <p>
+                                    Drag an image here or click to browse
+                                </p>
+
+                                <small>JPG, JPEG or PNG · Maximum 20 MB</small>
+                            </div>
+
+                        </label>
+
+                        <input
+                            type="file"
+                            name="file"
+                            id="leaf-image"
+                            accept=".jpg,.jpeg,.png"
+                            required
+                        >
+
+                        <div class="upload-buttons">
+
+                            <label for="leaf-image"
+                                   class="choose-button">
+                                📁 Choose Image
+                            </label>
+
+                            <button type="submit"
+                                    class="analyze-button">
+                                ✨ Analyze with AI
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                    <div class="photo-tip">
+                        💡 For better results, upload a clear image
+                        showing the affected leaf.
+                    </div>
+
+                    {% if error %}
+                    <div class="error-message">
+                        {{ error }}
+                    </div>
+                    {% endif %}
+
+                </div>
+
+
+                <!-- RESULT PANEL -->
+                <div class="result-panel" id="results">
+
+                    {% if prediction %}
+
+                    <div class="result-header">
+                        <span class="result-icon">⚠</span>
+
+                        <div>
+                            <h2>{{ prediction.replace("___", " - ").replace("_", " ") }}</h2>
+                            <p>AI Analysis Completed</p>
+                        </div>
+                    </div>
+
+                    <div class="confidence-section">
+
+                        <div class="confidence-label">
+                            <span>Model Confidence</span>
+                            <strong>{{ confidence }}%</strong>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill"
+                                 style="width: {{ confidence }}%;">
+                            </div>
+                        </div>
+
+                        <div class="result-note">
+                            Classification score from the CNN model.
+                            This is not a measurement of disease severity.
+                        </div>
+
+                    </div>
+
+                    {% if image_path %}
+                    <img src="{{ image_path }}"
+                         class="result-image"
+                         alt="Analyzed plant leaf">
+                    {% endif %}
+
+                    <div class="information-card">
+
+                        <h3>📋 Prediction Information</h3>
+
+                        <p>
+                            The CNN model classified the uploaded image
+                            as <strong>{{ prediction.replace("___", " - ").replace("_", " ") }}</strong>.
+                        </p>
+
+                        <p>
+                            Please verify the result with a local
+                            agricultural expert before applying treatment.
+                        </p>
+
+                    </div>
+
+                    <div class="result-footer">
+                        <span>✓ Prediction generated successfully</span>
+                    </div>
+
+                    {% else %}
+
+                    <div class="empty-result">
+
+                        <div class="empty-icon">🧠</div>
+
+                        <h2>AI Analysis Results</h2>
+
+                        <p>
+                            Your plant disease prediction will appear here
+                            after uploading and analyzing an image.
+                        </p>
+
+                        <div class="empty-steps">
+                            <div>01 <span>Upload leaf image</span></div>
+                            <div>02 <span>AI analyzes the image</span></div>
+                            <div>03 <span>View prediction result</span></div>
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+            <!-- BOTTOM INFORMATION -->
+            <section class="feature-section" id="about">
+
+                <h2>About the AI System</h2>
+
+                <div class="feature-grid">
+
+                    <div class="feature-card">
+                        <span>🧠</span>
+                        <h3>CNN Technology</h3>
+                        <p>Deep learning-based image classification.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <span>🌱</span>
+                        <h3>38 Classes</h3>
+                        <p>Trained to recognize 38 PlantVillage categories.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <span>⚡</span>
+                        <h3>Fast Prediction</h3>
+                        <p>Automatic analysis of uploaded leaf images.</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <footer>
+                Plant Disease Detection System | Powered by CNN & Flask
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <!-- IMAGE PREVIEW -->
+    <script>
+
+        const fileInput = document.getElementById("leaf-image");
+        const preview = document.getElementById("image-preview");
+        const placeholder = document.getElementById("upload-placeholder");
+
+        fileInput.addEventListener("change", function() {
+
+            const file = this.files[0];
+
+            if (file) {
+
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = "block";
+
+                placeholder.style.display = "none";
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
+
+   
